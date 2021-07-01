@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <h1>hello</h1>
+    <button @click="show">button</button>
   </div>
 </template>
 
@@ -12,6 +13,11 @@ export default {
   name: 'Home',
   components: {
     HelloWorld,
+  },
+  methods: {
+    show() {
+      this.$store.dispatch('movies/fetchFilm');
+    },
   },
 };
 </script>
