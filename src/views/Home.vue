@@ -1,23 +1,19 @@
 <template>
-  <div class="home">
-    <h1>hello</h1>
-    <button @click="show">button</button>
-  </div>
-</template>
+  <div>
+    <MoviesList :list="movies" /></div
+></template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import MoviesList from '@/components/MoviesList';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld,
+    MoviesList,
   },
-  methods: {
-    show() {
-      this.$store.dispatch('movies/fetchFilm');
-    },
+  computed: {
+    ...mapState('movies', ['movies']),
   },
 };
 </script>

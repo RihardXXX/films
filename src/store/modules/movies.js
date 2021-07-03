@@ -1,7 +1,9 @@
 import api from '@/services/api';
 import IDs from '@/store/mock/top250.js';
+import utils from '@/utils';
 
 const { getFilm } = api;
+const { errorResponse } = utils;
 
 const state = {
   top250: IDs,
@@ -9,6 +11,7 @@ const state = {
   currentPage: 1,
   isLoading: false,
   error: false,
+  movies: [],
 };
 
 const getters = {
@@ -17,17 +20,43 @@ const getters = {
   perPage: ({ perPage }) => perPage,
 };
 
-const mutations = {};
+const mutations = {
+  fetchFilmStart(state) {
+    state.isLoading = true;
+  },
+  fetchFilmSuccess(state, paylod) {
+    state.isLoading = false;
+    state.movies = [...paylod];
+  },
+  fetchFilmFailure(state, error) {
+    state.isLoading = false;
+    state.error = error;
+  },
+};
 
 const actions = {
+  initialMovies: {
+    handler({ dispatch }) {
+      dispatch('fetchFilm');
+    },
+    root: true,
+  },
   async fetchFilm({ getters, commit }) {
     const { currentPage, perPage, sliceIDs } = getters;
     const from = currentPage * perPage - perPage;
     const to = currentPage * perPage;
     const chunkFilms = sliceIDs(from, to);
-    const requests = chunkFilms.map((id) => getFilm(`?i${id}`));
+    commit('fetchFilmStart');
+    const requests = chunkFilms.map((id) => getFilm(`?i=${id}`));
     const response = await Promise.all(requests);
-    console.log(response);
+    if (!response || errorResponse(response)) {
+      const errorMessage = response[0]['Error'];
+      commit('fetchFilmFailure', errorMessage);
+      return errorMessage;
+    } else {
+      commit('fetchFilmSuccess', response);
+      return response;
+    }
   },
 };
 
