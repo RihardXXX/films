@@ -6,8 +6,11 @@
     <BRow>
       <template v-if="isList">
         <BCol cols="3" v-for="movi in list" :key="movi.imdbID">
-          <MoviItem :movi="movi" />
+          <MoviItem :movi="movi" @mouseover.native="onMouseOver(movi.Poster)" />
         </BCol>
+      </template>
+      <template v-else>
+        <div>Empty list films</div>
       </template>
     </BRow>
   </BContainer>
@@ -33,6 +36,11 @@ export default {
       return this.list && this.list.length;
     },
   },
+  methods: {
+    onMouseOver(poster) {
+      this.$emit('changeBackground', poster);
+    },
+  },
 };
 </script>
 
@@ -40,5 +48,10 @@ export default {
 .list-title {
   font-size: 50px;
   margin-bottom: 30px;
+}
+
+.list-title {
+  color: #ffff;
+  text-align: center;
 }
 </style>
