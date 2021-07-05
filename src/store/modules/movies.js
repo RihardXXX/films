@@ -18,6 +18,7 @@ const getters = {
   sliceIDs: ({ top250 }) => (from, to) => top250.slice(from, to),
   currentPage: ({ currentPage }) => currentPage,
   perPage: ({ perPage }) => perPage,
+  totalFilms: ({ top250 }) => top250.length,
 };
 
 const mutations = {
@@ -31,6 +32,9 @@ const mutations = {
   fetchFilmFailure(state, error) {
     state.isLoading = false;
     state.error = error;
+  },
+  setCurrentPage(state, paylod) {
+    state.currentPage = paylod;
   },
 };
 
@@ -57,6 +61,10 @@ const actions = {
       commit('fetchFilmSuccess', response);
       return response;
     }
+  },
+  changeCurrentPageCall({ commit, dispatch }, newCurrentPage) {
+    commit('setCurrentPage', newCurrentPage);
+    dispatch('fetchFilm');
   },
 };
 
