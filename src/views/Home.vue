@@ -1,5 +1,6 @@
 <template>
   <div class="home-page">
+    <Loader v-if="isLoading" />
     <PosterBackground :bg="bg" />
     <MoviesList :list="movies" @changeBackground="changeBackground" />
     <Pagination
@@ -14,6 +15,7 @@
 <script>
 import MoviesList from '@/components/MoviesList';
 import PosterBackground from '@/components/PosterBackground';
+import Loader from '@/components/Loader';
 import Pagination from '@/components/Pagination';
 import { mapState, mapGetters, mapActions } from 'vuex';
 
@@ -23,23 +25,35 @@ export default {
     MoviesList,
     PosterBackground,
     Pagination,
+    Loader,
   },
   data() {
     return {
       bg: '',
     };
   },
+  watch: {
+    '$route.query': {
+      handler: 'onPageQueryChange',
+      immediate: true,
+      deep: true,
+    },
+  },
   computed: {
-    ...mapState('movies', ['movies']),
+    ...mapState('movies', ['movies', 'isLoading']),
     ...mapGetters('movies', ['currentPage', 'perPage', 'totalFilms']),
   },
   methods: {
     ...mapActions('movies', ['changeCurrentPageCall']),
+    onPageQueryChange(newValue) {
+      const { page } = newValue;
+      this.changeCurrentPageCall(Number(page));
+    },
     changeBackground(poster) {
       this.bg = poster;
     },
-    changePage(newCurrentPage) {
-      this.changeCurrentPageCall(newCurrentPage);
+    changePage(page) {
+      this.$router.push({ query: { page } });
     },
   },
 };
