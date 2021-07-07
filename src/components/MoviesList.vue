@@ -6,7 +6,11 @@
     <BRow>
       <template v-if="isList">
         <BCol cols="3" v-for="movi in list" :key="movi.imdbID">
-          <MoviItem :movi="movi" @mouseover.native="onMouseOver(movi.Poster)" />
+          <MoviItem
+            @deleteFilm="deleteFilm"
+            :movi="movi"
+            @mouseover.native="onMouseOver(movi.Poster)"
+          />
         </BCol>
       </template>
       <template v-else>
@@ -18,6 +22,7 @@
 
 <script>
 import MoviItem from '@/components/MoviItem';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'MoviesList',
@@ -37,8 +42,20 @@ export default {
     },
   },
   methods: {
+    ...mapActions('movies', ['removeFilm']),
     onMouseOver(poster) {
       this.$emit('changeBackground', poster);
+    },
+    deleteFilm(data) {
+      const { id, title } = data;
+      this.$bvModal
+        .msgBoxConfirm(`вы действительно хотите удалить фильм ${title}`)
+        .then((value) => {
+          if (value) this.removeFilm(id);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

@@ -36,6 +36,9 @@ const mutations = {
   setCurrentPage(state, paylod) {
     state.currentPage = paylod;
   },
+  removeFilmSet(state, paylod) {
+    state.top250 = [...paylod];
+  },
 };
 
 const actions = {
@@ -64,6 +67,11 @@ const actions = {
   },
   changeCurrentPageCall({ commit, dispatch }, newCurrentPage) {
     commit('setCurrentPage', newCurrentPage);
+    dispatch('fetchFilm');
+  },
+  removeFilm({ state, commit, dispatch }, id) {
+    const newTop = state.top250.filter((film) => film !== id);
+    commit('removeFilmSet', newTop);
     dispatch('fetchFilm');
   },
 };

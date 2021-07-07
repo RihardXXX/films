@@ -14,7 +14,9 @@
           <BButton variant="outline-light">редактировать</BButton>
         </div>
         <div class="col">
-          <BButton variant="outline-light">удалить</BButton>
+          <BButton variant="outline-light" @click="deleteItemFilm"
+            >удалить</BButton
+          >
         </div>
       </div>
     </div>
@@ -33,6 +35,12 @@ export default {
   computed: {
     bgPoster() {
       return { 'background-image': `url(${this.movi.Poster})` };
+    },
+  },
+  methods: {
+    deleteItemFilm() {
+      const { imdbID: id, Title: title } = this.movi;
+      this.$emit('deleteFilm', { id, title });
     },
   },
 };

@@ -2,6 +2,7 @@
   <div class="home-page">
     <Loader v-if="isLoading" />
     <PosterBackground :bg="bg" />
+    <Header />
     <MoviesList :list="movies" @changeBackground="changeBackground" />
     <Pagination
       :total="totalFilms"
@@ -17,6 +18,7 @@ import MoviesList from '@/components/MoviesList';
 import PosterBackground from '@/components/PosterBackground';
 import Loader from '@/components/Loader';
 import Pagination from '@/components/Pagination';
+import Header from '@/components/Header';
 import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -26,6 +28,7 @@ export default {
     PosterBackground,
     Pagination,
     Loader,
+    Header,
   },
   data() {
     return {
