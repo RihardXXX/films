@@ -28,16 +28,20 @@ const mutations = {
   fetchFilmSuccess(state, paylod) {
     state.isLoading = false;
     state.movies = [...paylod];
+    state.error = false;
   },
   fetchFilmFailure(state, error) {
     state.isLoading = false;
-    state.error = error;
+    state.error = true;
   },
   setCurrentPage(state, paylod) {
     state.currentPage = paylod;
   },
   removeFilmSet(state, paylod) {
     state.top250 = [...paylod];
+  },
+  setErrorFalse(state, paylod) {
+    state.error = paylod;
   },
 };
 
@@ -73,6 +77,19 @@ const actions = {
     const newTop = state.top250.filter((film) => film !== id);
     commit('removeFilmSet', newTop);
     dispatch('fetchFilm');
+  },
+  async searchFilm({ commit }, query) {
+    commit('fetchFilmStart');
+    const response = await getFilm(`?s=${query}`);
+    if (response && !response.Error) {
+      const result = response.Search;
+      commit('fetchFilmSuccess', result);
+      return result;
+    } else {
+      // const errorMessage = response.Error;
+      commit('fetchFilmFailure');
+      // return errorMessage;
+    }
   },
 };
 

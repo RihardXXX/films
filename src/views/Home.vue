@@ -43,7 +43,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('movies', ['movies', 'isLoading']),
+    ...mapState('movies', ['movies', 'isLoading', 'error']),
     ...mapGetters('movies', ['currentPage', 'perPage', 'totalFilms']),
   },
   methods: {
