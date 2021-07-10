@@ -13,6 +13,4 @@ const store = new Vuex.Store({
   },
 });
 
-store.dispatch('initialMovies');
-
 export default store;

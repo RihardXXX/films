@@ -9,6 +9,7 @@
           <MoviItem
             @deleteFilm="deleteFilm"
             :movi="movi"
+            @showModalInfoFilm="showModalInfoFilm"
             @mouseover.native="onMouseOver(movi.Poster)"
           />
         </BCol>
@@ -17,12 +18,25 @@
         <div>Empty list films</div>
       </template>
     </BRow>
+    <BModal
+      body-class="body-info-modal"
+      :id="idInfoModal"
+      size="xl"
+      hide-footer
+      hide-header
+    >
+      <InfoFilmShow
+        :film="selectFilm"
+        @closeModalFilmInfo="closeModalFilmInfo"
+      />
+    </BModal>
   </BContainer>
 </template>
 
 <script>
 import MoviItem from '@/components/MoviItem';
 import { mapActions } from 'vuex';
+import InfoFilmShow from '@/components/InfoFilmShow';
 
 export default {
   name: 'MoviesList',
@@ -33,12 +47,24 @@ export default {
       default: () => [],
     },
   },
+  data() {
+    return {
+      idInfoModal: 'idInfoModal',
+      idFilm: '',
+    };
+  },
   components: {
     MoviItem,
+    InfoFilmShow,
   },
   computed: {
     isList() {
       return this.list && this.list.length;
+    },
+    selectFilm() {
+      return this.idFilm
+        ? this.list.find((film) => film.imdbID === this.idFilm)
+        : null;
     },
   },
   methods: {
@@ -57,6 +83,13 @@ export default {
           console.log(err);
         });
     },
+    showModalInfoFilm(id) {
+      this.idFilm = id;
+      this.$bvModal.show(this.idInfoModal);
+    },
+    closeModalFilmInfo() {
+      this.$bvModal.hide(this.idInfoModal);
+    },
   },
 };
 </script>
@@ -67,8 +100,14 @@ export default {
   margin-bottom: 30px;
 }
 
-.list-title {
+.body-class {
   color: #ffff;
   text-align: center;
+}
+</style>
+
+<style>
+.body-info-modal {
+  padding: 0;
 }
 </style>

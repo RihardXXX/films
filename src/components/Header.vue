@@ -3,7 +3,7 @@
     <BNavbar type="dark" class="navbar" variant="dark">
       <BContainer>
         <BNavbarBrand href="#">Фильмы</BNavbarBrand>
-        <BNavForm>
+        <BNavForm class="nav-form">
           <BFormInput
             class="mr-sm-2 search-input"
             placeholder="поиск"
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import ErrorModal from '@/components/ErrorModal';
 import { mapActions, mapState } from 'vuex';
 
 export default {
@@ -26,6 +27,9 @@ export default {
     return {
       searchText: '',
     };
+  },
+  components: {
+    ErrorModal,
   },
   watch: {
     searchText: 'onSearch',
@@ -39,6 +43,13 @@ export default {
         this.fetchFilm();
       }
     },
+    makeToast(variant = null) {
+      this.$bvToast.toast('фильм не найдет', {
+        title: `ошибка`,
+        variant,
+        solid: true,
+      });
+    },
   },
   computed: {
     ...mapState('movies', ['error']),
@@ -49,7 +60,6 @@ export default {
 <style scoped>
 .header {
   margin-bottom: 30px;
-  position: relative;
 }
 
 .navbar {
@@ -66,10 +76,14 @@ export default {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+.nav-form {
+  position: relative;
+}
+
 .message {
   color: #ffff;
   position: absolute;
-  top: 110px;
-  left: 940px;
+  top: 80px;
+  left: 50px;
 }
 </style>

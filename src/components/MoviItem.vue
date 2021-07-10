@@ -11,7 +11,9 @@
           <BButton size="md" block variant="outline-light">смотреть</BButton>
         </div>
         <div class="col">
-          <BButton variant="outline-light">редактировать</BButton>
+          <BButton @click="infoShow" variant="outline-light"
+            >информация</BButton
+          >
         </div>
         <div class="col">
           <BButton variant="outline-light" @click="deleteItemFilm"
@@ -36,11 +38,17 @@ export default {
     bgPoster() {
       return { 'background-image': `url(${this.movi.Poster})` };
     },
+    id() {
+      return this.movi.imdbID;
+    },
   },
   methods: {
     deleteItemFilm() {
-      const { imdbID: id, Title: title } = this.movi;
+      const { Title: title } = this.movi;
       this.$emit('deleteFilm', { id, title });
+    },
+    infoShow() {
+      this.$emit('showModalInfoFilm', this.id);
     },
   },
 };
